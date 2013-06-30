@@ -61,7 +61,10 @@ function vsd_get_status() {
  *
  */
 function _vsd_getXML() {
-	include "service/VentriloServiceDirect.php";
+	include_once "service/VentriloServiceLocalFile.php";
+	//include_once "service/VentriloServiceBinary.php";
+	$impl = new VentriloServiceLocalFile();
+//	$impl = new VentriloServiceBinary();
 	
 	$before_widget = sprintf('<div class="widget %s">', $widget_obj->widget_options['classname']);
 
@@ -69,7 +72,6 @@ function _vsd_getXML() {
 	$port = isset($_GET["port"]) ? $_GET["port"] : _getSetting('port'); 
 	$pass = isset($settings['password']) ? _getSetting('password') : ""; 
 	
-	$impl = new VentriloServiceDirect();
 	return $impl->get_XML($host, $port, $pass);
 }
 

@@ -5,16 +5,11 @@
 		abstract function get_XML($host, $port, $pass);
 		
 		function get_XML_Error($host, $port, $pass, $serviceException) {
-			$xml = "<ventrilo>\n";
-			$xml .= "<server>\n";
-			$xml .= "<host>$host</host>\n";
-			$xml .= "<port>$port</port>\n";
-			$xml .= "<error no='".$serviceException->getCode()."'>";
-			$xml .= "<message>".$this->cdata($serviceException->getMessage())."</message>";
-			if($serviceException->isDebugged()) $xml .= "<debug>".$this->cdata($serviceException->getDebuggingInfo())."</debug>";
-			$xml .= "</error>\n";
-			$xml .= "</server>\n";
-			$xml .= "</ventrilo>\n";
+			$xml = "<ventrilo ";
+			$xml .= "address=\"$host:$port\" ";
+			$xml .= "errorno=\"".$serviceException->getCode()."\" ";
+			$xml .= "message=\"".$serviceException->getMessage()."\" ";
+			$xml .= "/>\n";
 			return $xml;
 		}
 		

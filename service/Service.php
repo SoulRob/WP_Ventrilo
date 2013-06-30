@@ -1,15 +1,21 @@
 <?php
-	include_once 'VentriloServiceDirect.php';
-	include_once 'VentriloServiceCRON.php';	
+	include_once 'VentriloServiceBinary.php';
+	include_once 'VentriloServiceLocalFile.php';	
 		
 	
 	// Require parameters from GET
 	$host = isset($_GET["host"]) ? $_GET["host"] : "192.168.0.1";
 	$port = isset($_GET["port"]) ? $_GET["port"] : "3784";
 	$pass = isset($_GET["pass"]) ? $_GET["pass"] : "";
+	$usebinary = strcasecmp( (!isset($_GET["usebinary"]) ? "false" : $_GET["usebinary"]), "true" )==0;
 	$prettyprint = strcasecmp( (!isset($_GET["prettyprint"]) ? "false" : $_GET["prettyprint"]), "true" )==0;  
 	
-	$impl = new VentriloServiceCRON();
+	if($usebinary=='true') {
+		$impl = new VentriloServiceBinary();
+	} else {
+		$impl = new VentriloServiceLocalFile();
+	}
+	
 	if(!$impl instanceof VentriloService){
 		throw new ServiceException("Configuration error: ".get_class($impl)." does not implement VentriloService");
 	}
@@ -32,8 +38,6 @@
 			$dom->loadXML($xml);
 			$dom->formatOutput = TRUE;
 			$xml = $dom->saveXml();
-		} else {
-			echo "<?xml version='1.0'?>\n";
 		}
 		
 		echo $xml;
